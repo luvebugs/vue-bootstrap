@@ -5,8 +5,8 @@
         </div>
         <div class="calendar-pannel" v-if="visiable">
             <div class="calendar-item" v-for="calendar in calendars">
-                <v-datepicker :side="calendar" :is-ranged="isRanged" :date.sync="date" :start-date.sync="startDate" :end-date.sync="endDate" :lang="true"></v-datepicker>
-                <v-timepicker :time.sync="time[calendar]"></v-timepicker>
+                <v-datepicker :side="calendar" :is-ranged="isRanged" :date.sync="date" :start-date.sync="dates[0]" :end-date.sync="dates[1]" :lang="true" :year.sync="year" :month.sync="month"></v-datepicker>
+                <v-timepicker :time.sync="times[calendar]"></v-timepicker>
             </div>
         </div>
     </div>
@@ -26,10 +26,9 @@
         data: function () {
             return {
                 visiable: true,
-                time: [null, null],
-                startDate: null,
-                endDate: null,
-                date: null
+                date: new Date(),
+                dates: [null, null],
+                times: [null, null],
             };
         },
         computed: {
@@ -38,9 +37,9 @@
             },
             datetime: function () {
                 if (this.isRanged) {
-                    this.value = this.format(this.startDate, 'yyyy-MM-dd') + ' ' + this.format(this.time[0], 'hh:mm:ss') + '--' + this.format(this.endDate, 'yyyy-MM-dd') + ' ' + this.format(this.time[1], 'hh:mm:ss');
+                    this.value = this.format(this.dates[0], 'yyyy-MM-dd') + ' ' + (this.format(this.times[0], 'hh:mm:ss') || '00:00:00') + '  ' + this.format(this.dates[1], 'yyyy-MM-dd') + ' ' + (this.format(this.times[1], 'hh:mm:ss') || '00:00:00');
                 } else {
-                    this.value = this.format(this.date, 'yyyy-MM-dd') + ' ' + this.format(this.time[0], 'hh:mm:ss');
+                    this.value = this.format(this.date, 'yyyy-MM-dd') + ' ' + (this.format(this.times[0], 'hh:mm:ss') || '00:00:00');
                 }
                 this.change(this.value);
                 return this.value;
@@ -64,7 +63,7 @@
                     month = time.getMonth() + 1, //月份
                     day = time.getDate(), //日
                     hours24 = time.getHours(), //小时
-                    hours = hours24 % 12 === 0 ? 12 : hours24 % 12,
+                    hours = hours24,
                     minutes = time.getMinutes(), //分
                     seconds = time.getSeconds(), //秒
                     milliseconds = time.getMilliseconds(); //毫秒
@@ -96,7 +95,6 @@
         width: 600px;
     }
     .calendar {
-        font-size: 14px;
         width: 100%;
         position: relative;
         .calendar-pannel {

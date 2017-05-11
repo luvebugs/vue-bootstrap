@@ -1,12 +1,12 @@
 <template>
     <div class="datepicker">
         <div class="datepicker-header" v-show="!monthsVisiable && !yearsVisiable">
-            <span class="prev-year" @click="changeYear(year - 1)" :class="{'disabled': canChangeYear(year - 1)}"><i class="fa fa-angle-double-left" aria-hidden="true"></i></span>
-            <span class="prev-month" @click="changeMonth(month - 1, calendar)" :class="{'disabled': canChangeMonth(month - 1)}"><i class="fa fa-angle-left" aria-hidden="true"></i></span>
+            <span class="prev-year" @click="changeYear(year - 1)" ><i class="fa fa-angle-double-left" aria-hidden="true"></i></span>
+            <span class="prev-month" @click="changeMonth(month - 1, calendar)" ><i class="fa fa-angle-left" aria-hidden="true"></i></span>
             <span class="year" v-text="year" @click="showYears()"></span>
             <span class="month" v-text="month" @click="showMonths()"></span>
-            <span class="next-year" @click="changeYear(year + 1)" :class="{'disabled': canChangeYear(year + 1)}"><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>
-            <span class="next-month" @click="changeMonth(month + 1, calendar)" :class="{'disabled': canChangeMonth(month + 1)}"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+            <span class="next-year" @click="changeYear(year + 1)" ><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>
+            <span class="next-month" @click="changeMonth(month + 1, calendar)" ><i class="fa fa-angle-right" aria-hidden="true"></i></span>
         </div>
         <div class="datepicker-header" v-show="monthsVisiable || yearsVisiable">
             <a class="year" v-text="year" @click="showYears()"></a>
@@ -28,12 +28,12 @@
                 </tr>
             </table>
             <div class="datepicker-year" v-show="yearsVisiable">
-                <span class="datepicker-year-prev" @click="changeYearRange(-1)" :class="{'disabled': canChangeYear(year - 1)}"><i class="fa fa-caret-up" aria-hidden="true"></i></span>
-                <span class="datepicker-year-item" v-for="item in filterYears" @click="selectYear(item)" :class="{'datepicker-year-selected': item.isSelected, 'disabled': canChangeYear(item.value)}">{{item.value}} 年</span>
-                <span class="datepicker-year-next" @click="changeYearRange(1)" :class="{'disabled': canChangeYear(year + 1)}"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
+                <span class="datepicker-year-prev" @click="changeYearRange(-1)" ><i class="fa fa-caret-up" aria-hidden="true"></i></span>
+                <span class="datepicker-year-item" v-for="item in filterYears" @click="selectYear(item)" :class="{'datepicker-year-selected': item.isSelected}">{{item.value}} 年</span>
+                <span class="datepicker-year-next" @click="changeYearRange(1)" ><i class="fa fa-caret-down" aria-hidden="true"></i></span>
             </div>
             <div class="datepicker-month" v-show="monthsVisiable">
-                <span v-for="item in filterMonths" class="datepicker-month-item" @click="selectMonth(item)" :class="{'datepicker-month-selected': item.isSelected, 'disabled': canChangeMonth(item.value)}">{{item.value}} 月</span>
+                <span v-for="item in filterMonths" class="datepicker-month-item" @click="selectMonth(item)" :class="{'datepicker-month-selected': item.isSelected}">{{item.value}} 月</span>
             </div>
         </div>
         <div class="datepicker-footer"></div>
@@ -53,12 +53,7 @@
         data: function () {
             // let dates = this.getDates();
             return {
-                year: new Date().getFullYear(),
-                month: this.side ? new Date().getMonth() + 2 : new Date().getMonth() + 1,
                 days: this.lang ? ['一', '二', '三', '四', '五', '六', '日'] : ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-                months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-                    'September', 'October', 'November', 'December'
-                ],
                 dates: [],
                 years: [],
                 months: [],
@@ -70,8 +65,25 @@
             };
         },
         computed: {
-            filterValue: function () {
-                return this.value = this.format(this.date, 'yyyy-MM-dd');
+            year: {
+                get: function () {
+                    return this.side ? (this.date.getMonth() + 2 == 13 ? this.date.getFullYear() + 1 : this.date.getFullYear()) : this.date.getFullYear();
+                },
+                set: function (year) {
+                    let y = this.date.getMonth() + 2 == 13 ? year - 1 : year;
+                    let date = new Date(y, this.date.getMonth(), this.date.getDate());
+                    this.date = date;
+                }
+            },
+            month: {
+                get: function () {
+                    return this.side ? (this.date.getMonth() + 2 == 13 ? 1 : this.date.getMonth() + 2) : this.date.getMonth() + 1;
+                },
+                set: function (month) {
+                    let m = this.side ? month - 2 : month - 1;
+                    let date = new Date(this.date.getFullYear(), m, this.date.getDate());
+                    this.date = date;
+                }
             },
 
             filterDates: function () {
@@ -106,12 +118,12 @@
                     isInRang = this.startDate && rangeDate > this.startDate && rangeDate < (this.endDate || this.borderDate) ? true : false;
 
                     // 被选择的时间
-                    let isSelected = this.format(rangeDate, 'yyyy-MM-dd') == this.format(this.startDate,
-                        'yyyy-MM-dd') || this.format(rangeDate, 'yyyy-MM-dd') == this.format(this.endDate,
-                        'yyyy-MM-dd') || this.format(rangeDate, 'yyyy-MM-dd') == this.format(this.date, 'yyyy-MM-dd');
+                    let isSelected = (this.startDate && rangeDate.toDateString() == this.startDate.toDateString()) 
+                    || (this.endDate && rangeDate.toDateString() == this.endDate.toDateString()) 
+                    || (this.date && rangeDate.toDateString() == this.date.toDateString());
 
                     // 是否今天
-                    let isToday = this.format(rangeDate, 'yyyy-MM-dd') == this.format(today, 'yyyy-MM-dd');
+                    let isToday = rangeDate.toDateString() == today.toDateString();
 
                     dates.push({
                         day: day,
@@ -156,24 +168,6 @@
             }
         },
         methods: {
-            canChangeYear: function (year) {
-                if (this.isRanged) {
-                    if (!this.side) {
-                        return year > new Date().getFullYear();
-                    } else {
-                        return year < new Date().getFullYear();
-                    }
-                }
-            },
-            canChangeMonth: function (month) {
-                if (this.isRanged) {
-                    if (!this.side) {
-                        return month > new Date().getMonth() + 1;
-                    } else {
-                        return month < new Date().getMonth() + 2;
-                    }
-                }
-            },
             changeRange: function (date, last) {
                 if (last) {
                     if (!this.side) {
@@ -194,14 +188,11 @@
                 this.monthsVisiable = !this.monthsVisiable;
             },
             changeMonth: function (month) {
-                let date = new Date(this.year, month, 1);
-                this.month = date.getMonth() || 12;
-                this.dates = this.getDates();
+                this.date.setMonth(month - 1);
+                this.month = this.date.getMonth() + 1 || 12;
             },
             changeYear: function (year) {
-                let date = new Date(year, this.month, 1);
-                this.year = date.getFullYear();
-                this.dates = this.getDates();
+                this.year = year;
             },
             changeYearRange: function (rang) {
                 this.year = this.year + rang * 10;
@@ -286,41 +277,7 @@
                     date.isInRang = false;
                 });
                 this.startDate = this.endDate = null;
-            },
-            //将Date转化为指定格式的String
-            format: function (time, format) {
-                if (!time) {
-                    return '';
-                }
-                format = format || this.format;
-                var year = time.getYear(), //年份
-                    month = time.getMonth() + 1, //月份
-                    day = time.getDate(), //日
-                    hours24 = time.getHours(), //小时
-                    hours = hours24 % 12 === 0 ? 12 : hours24 % 12,
-                    minutes = time.getMinutes(), //分
-                    seconds = time.getSeconds(), //秒
-                    milliseconds = time.getMilliseconds(); //毫秒
-                var map = {
-                    yyyy: year,
-                    MM: ('0' + month).slice(-2),
-                    M: month,
-                    dd: ('0' + day).slice(-2),
-                    d: day,
-                    HH: ('0' + hours24).slice(-2),
-                    H: hours24,
-                    hh: ('0' + hours).slice(-2),
-                    h: hours,
-                    mm: ('0' + minutes).slice(-2),
-                    m: minutes,
-                    ss: ('0' + seconds).slice(-2),
-                    s: seconds,
-                    S: milliseconds
-                };
-                return format.replace(/y+|M+|d+|H+|h+|m+|s+|S+/g, function (str) {
-                    return map[str];
-                });
-            },
+            }
         }
     }
 </script>

@@ -4,14 +4,14 @@
             <div class="timepicker-header">时</div>
             <div class="timepicker-scrollbar" v-el:hour v-scroll:scroll="'hour'">
                 <ul class="timepicker-list">
-                    <li class="timepicker-item" v-for="n in 12" v-text="n" @click="selectHour('hour', n, $event)" :class="{'active': n == hour}"></li>
+                    <li class="timepicker-item" v-for="n in 24" v-text="n" @click="selectHour('hour', n, $event)" :class="{'active': n == hour}"></li>
                 </ul>
             </div>
         </div>
         <div class="timepicker-warp">
             <div class="timepicker-header">分</div>
             <div class="timepicker-scrollbar" v-el:minute v-scroll:scroll="'minute'">
-                <ul class="timepicker-list" =>
+                <ul class="timepicker-list">
                     <li class="timepicker-item" v-for="n in 60" v-text="n" @click="selectMinute('minute', n, $event)" :class="{'active': n == minute}"></li>
                 </ul>
             </div>
@@ -49,74 +49,55 @@ import Vue from 'vue';
             }
         },
         computed: {
-            filterValue: function () {
-                return this.value = this.format(this.time, 'hh:mm:ss');
-            }
+            hour: {
+                get: function () {
+                    return this.time ? (this.time.getHours() == 12 ? 0 : this.time.getHours()) : 0;
+                },
+                set: function (hour) {
+                    let date = new Date();
+                    date.setHours(hour, this.minute, this.second);
+                    this.time = date;
+                }
+            },
+            minute: {
+                get: function () {
+                    return this.time ? this.time.getMinutes() : 0;
+                },
+                set: function (minute) {
+                    let date = new Date();
+                    date.setHours(this.hour, minute, this.second);
+                    this.time = date;
+                }
+            },
+            second: {
+                get: function () {
+                    return this.time ? this.time.getSeconds() : 0;
+                },
+                set: function (second) {
+                    let date = new Date();
+                    date.setHours(this.hour, this.minute, second);
+                    this.time = date;
+                }
+            },
         },
         methods: {
             scroll: function (type, event) {
                 var number = this.$els[type].scrollTop / 24 - 0.5;
                 this[type] = Math.ceil(number);
-                let date = new Date();
-                date.setHours(this.hour, this.minute, this.second);
-                this.time = date;
 
             },
             selectHour: function (type, number, event) {
                 this.hour = number;
                 this.itemTarget = event.target;
                 this.$els[type].scrollTop = number * event.target.clientHeight;
-                let date = new Date();
-                date.setHours(this.hour, this.minute, this.second);
-                this.time = date;
             },
             selectMinute: function (type, number, event) {
                 this.minute = number;
                 this.$els[type].scrollTop = number * event.target.clientHeight;
-                let date = new Date();
-                this.time = date.setHours(this.hour, this.minute, this.second);
-                this.time = date;
             },
             selectSecond: function (type, number, event) {
                 this.second = number;
                 this.$els[type].scrollTop = number * event.target.clientHeight;
-                let date = new Date();
-                this.time = date.setHours(this.hour, this.minute, this.second);
-                this.time = date;
-            },
-            //将Date转化为指定格式的String
-            format: function (time, format) {
-                if (!time) {
-                    return '';
-                }
-                format = format || this.format;
-                var year = time.getFullYear(), //年份
-                    month = time.getMonth() + 1, //月份
-                    day = time.getDate(), //日
-                    hours24 = time.getHours(), //小时
-                    hours = hours24 % 12 === 0 ? 12 : hours24 % 12,
-                    minutes = time.getMinutes(), //分
-                    seconds = time.getSeconds(), //秒
-                    milliseconds = time.getMilliseconds(); //毫秒
-                var map = {
-                    yyyy: year,
-                    MM: ('0' + month).slice(-2),
-                    M: month,
-                    dd: ('0' + day).slice(-2),
-                    d: day,
-                    HH: ('0' + hours24).slice(-2),
-                    H: hours24,
-                    hh: ('0' + hours).slice(-2),
-                    h: hours,
-                    mm: ('0' + minutes).slice(-2),
-                    m: minutes,
-                    ss: ('0' + seconds).slice(-2),
-                    s: seconds,
-                    S: milliseconds
-                };
-                return format.replace(/y+|M+|d+|H+|h+|m+|s+|S+/g, function (str) {
-                    return map[str];
-                });
             }
         },
     }

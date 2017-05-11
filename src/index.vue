@@ -197,6 +197,13 @@
             <v-table :title="table.title" :header="table.tableHeader" :body="table.tableBody" :selects.sync="table.selectIdeas" :check-change="tableCheckRow" :page-change="getTable" :size-change="getTable" :page-total.sync="table.all" :page-size.sync="table.size" :page-number.sync="table.now"
                 :loading="table.loading"></v-table>
         </div>
+        <br/>
+        <br/>
+        <label><h5>16.编辑器</h5></label>
+        <div>
+        <v-editor :content="content" :height="500">
+        </v-editor>
+        </div>
     </div>
 
     <!-- <div>
@@ -335,6 +342,7 @@ export default {
     },
     data() {
         return {
+            content: '',
             //datetimepicker
             datetimepicker: {
                 value: '',
