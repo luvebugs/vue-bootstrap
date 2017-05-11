@@ -1,7 +1,13 @@
-
-<style lang="less">
+/**
+ * @file 表格
+ * @author sunxiaoxu01@baidu.com
+ */
+<style lang="less" scoped>
 @import "style/loading.less";
 
+label {
+    color: red;
+}
 .table-aprday{
     width: auto;
     min-width: 100%;
@@ -61,7 +67,7 @@ td {
                     <i class="fa fa-cog" aria-hidden="true" style="padding-right: 8px;"></i>显示列
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" v-show="open">
-                    <a class="dropdown-item" @click="checkAll(item)">
+                    <a class="dropdown-item" @click="showAll(item)">
                         <span>全选</span>
                         <i class="fa fa-check" v-if="allChecked" style="pointer-events: none;"></i>
                     </a>
@@ -134,6 +140,14 @@ export default {
         }
     },
     props: {
+        'data': {
+            type: Object
+        },
+        'handler': {
+            type: Function,
+            default: function () {
+            }
+        },
         'loading': {
             type: Boolean,
             default: false
@@ -177,19 +191,29 @@ export default {
         "header": {
             type: Array,
             // required: true
+            default: function () {
+                return []
+            }
         },
         "body": {
             type: Array,
             // required: true
+            default: function () {
+                return []
+            }
         },
         'selects': {
             type: Array
         },
         'pageChange': {
-            type: Function
+            type: Function,
+            default: function () {
+            }
         },
         'sizeChange': {
-            type: Function
+            type: Function,
+            default: function () {
+            }
         },
         'checkChange':{
             type: Function
@@ -200,7 +224,7 @@ export default {
     computed: {
         columns: function () {
                 let self = this;
-                self.header.forEach(function(item, index) {
+                (self.data ? self.data.header : self.header).forEach(function(item, index) {
                     let visible = window.localStorage? localStorage.getItem(item.field): Cookie.read(item.field);
                     let column = {
                         visible: visible ? visible === 'true' : true,
@@ -216,7 +240,7 @@ export default {
         },
         rows: function () {
             let self = this;
-            self.body.forEach(function(item, index) {
+            (self.data ? self.data.body : self.body).forEach(function(item, index) {
                 let row = {
                     checked: false
                 };
@@ -243,6 +267,8 @@ export default {
         this._closeEvent = document.addEventListener('click', (e) => {
           if (this.$els && this.$els.setting && !this.$els.setting.contains(e.target)) this.open = false;
         });
+
+        this.handler(this);
     },
     beforeDestroy () {
         if (this._closeEvent) this._closeEvent.remove();
@@ -252,7 +278,11 @@ export default {
         compileRender () {
             let self = this
             self.$nextTick(() => {
-                self._context.$compile(self.$el)
+                try{
+                    self._context.$destory();
+                    self._context.$compile(self.$el);
+                }catch (error) {
+                }
             });
         },
         toggleColumn: function(column) {
@@ -336,7 +366,7 @@ export default {
         toggleMenu: function (open) {
             this.open = !this.open;
         },
-        checkAll: function () {
+        showAll: function () {
             let self = this;
             if (self.allChecked) {
                 self.clearCheck();

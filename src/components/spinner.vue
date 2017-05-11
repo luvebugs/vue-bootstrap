@@ -10,6 +10,7 @@
 <script>
 const MIN_WAIT = 500 // in ms
 export default {
+  name: 'v-spinner',
   props: {
     size: {
       type: String,

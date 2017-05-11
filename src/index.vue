@@ -3,6 +3,15 @@
 <template>
 <div>
     <div class="form-group">
+        <label><h5>0.时间选择插件</h5></label>
+        <div>
+            <div>日期: {{datetimepicker.value}}</div>
+            是否范围选择:
+            <v-switch :value.sync="datetimepicker.isRanged"></v-switch>
+            <v-datetimepicker :value.sync="datetimepicker.value" :is-ranged="datetimepicker.isRanged"></v-datetimepicker>
+        </div>
+        <br/>
+        <br/>
         <label><h5>1.上传插件</h5></label>
         <div>
             <div>单词选择的文件名称: {{upload.file.name}}</div>
@@ -202,21 +211,24 @@
 </template>
 
 <script>
-import vSearch from 'components/search.vue'
-import vModal from 'components/modal.vue'
-import vSelect from 'components/select.vue'
-import vTreeselect from 'components/treeselect.vue'
-import vCascaderselect from 'components/cascaderselect.vue'
-import vSpinner from 'components/spinner.vue'
-import vTable from 'components/table.vue'
-import vTree from 'components/tree.vue'
-import vCascader from 'components/cascader.vue'
-import vCheck from 'components/check.vue'
-import vValidator from 'components/validator.vue'
-import vSwitch from 'components/switch.vue'
-import vToast from 'components/toast.vue'
-import vTooltip from 'components/tooltip.vue'
-import vUpload from 'components/upload.vue'
+import vSearch from './components/search.vue'
+import vModal from './components/modal.vue'
+import vSelect from './components/select.vue'
+import vTreeselect from './components/treeselect.vue'
+import vCascaderselect from './components/cascaderselect.vue'
+import vSpinner from './components/spinner.vue'
+import vTable from './components/table.vue'
+import vTree from './components/tree.vue'
+import vCascader from './components/cascader.vue'
+import vCheck from './components/check.vue'
+import vValidator from './components/validator.vue'
+import vSwitch from './components/switch.vue'
+import vToast from './components/toast.vue'
+import vTooltip from './components/tooltip.vue'
+import vUpload from './components/upload.vue'
+import vDatetimepicker from './components/datetimepicker.vue'
+import vTimepicker from './components/timepicker.vue'
+import vDatepicker from './components/datepicker.vue'
 
 // demo data
 var treeData = [{
@@ -316,10 +328,18 @@ export default {
         vSwitch,
         vToast,
         vTooltip,
-        vUpload
+        vUpload,
+        vDatetimepicker,
+        vTimepicker,
+        vDatepicker
     },
     data() {
         return {
+            //datetimepicker
+            datetimepicker: {
+                value: '',
+                isRanged: true
+            },
             // tooltip
             tooltip: {
                 effect: 'fade'
@@ -422,6 +442,11 @@ export default {
                 file: {},
                 multiple: true,
                 option: {}
+            },
+            data: {
+                time: '2016-05-15',
+                startTime: new Date('2016-03-31').getTime(),
+                endTime: new Date('2016-03-31').getTime()
             }
 
         }
@@ -430,6 +455,10 @@ export default {
         this.getTable();
     },
     methods: {
+        confrim:function(startTime,endTime){
+                    console.log(startTime);
+                    console.log(endTime);
+        },
         changeToNumber: function(){
             return parseInt(this.toast.timeout)
         },

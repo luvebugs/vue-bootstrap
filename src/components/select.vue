@@ -200,6 +200,7 @@
 <script>
 import vTip from './tooltip.vue'
 export default {
+    name: 'v-select',
     components: {
         vTip
     },

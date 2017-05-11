@@ -21,6 +21,7 @@
 
 <script>
 export default {
+    name: 'v-search',
     props: {
         options: {
             type: Array,

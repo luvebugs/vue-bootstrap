@@ -32,6 +32,7 @@
 
 <script type="text/babel">
     export default {
+        name: 'v-toast',
         props: {
             type: {
                 type: String,

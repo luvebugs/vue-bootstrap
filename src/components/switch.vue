@@ -64,6 +64,7 @@
 <script>
 // define the item component
 export default {
+    name: 'v-switch',
     props: {
         disabled: {
             type: Boolean,

@@ -223,6 +223,7 @@
 import vTip from './tooltip.vue'
 import vCascader from './cascader.vue'
 export default {
+    name: 'v-cascaderselect',
     components: {
         vTip,
         vCascader

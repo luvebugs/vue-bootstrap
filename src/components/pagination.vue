@@ -1,4 +1,7 @@
-
+/**
+ * @file 分页
+ * @author sunxiaoxu01@baidu.com
+ */
 <style>
 .total-page {
     margin-left: 10px;
@@ -58,6 +61,7 @@
 
 
 export default {
+    name: 'v-pagination',
     props: {
         pageTotal: {
             type: Number,

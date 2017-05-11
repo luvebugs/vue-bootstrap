@@ -220,6 +220,7 @@
 import vTip from './tooltip.vue'
 import vTree from './tree.vue'
 export default {
+    name: 'v-treeselect',
     components: {
         vTip,
         vTree

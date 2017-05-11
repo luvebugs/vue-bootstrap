@@ -122,6 +122,7 @@
 </template>
 <script type="text/babel">
 export default {
+    name: 'v-upload',
     props: {
         multiple: {
             type: Boolean

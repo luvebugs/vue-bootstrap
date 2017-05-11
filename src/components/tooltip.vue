@@ -12,6 +12,7 @@
 
 <script>
 export default {
+    name: 'v-tooltip',
     props: {
         trigger: {
             type: String,

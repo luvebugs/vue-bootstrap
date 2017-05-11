@@ -7,6 +7,7 @@
 
 <script>
 export default {
+    name: 'v-check',
     props: {
         check: {
             type: Boolean,

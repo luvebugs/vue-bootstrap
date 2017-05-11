@@ -12,6 +12,7 @@
 
 <script type="text/babel">
     export default {
+        name: 'v-modal',
         inherit: true,
         props: {
             show: {
