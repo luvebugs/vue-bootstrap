@@ -1,15 +1,15 @@
 import Vue from 'vue';
-import vueResource from 'vue-resource';
 import App from './App'
-import vueCompoent from './components/index';
-
-console.log(vueResource(Vue));
+// import vueCompoent from './components/index';
+import editor from './components/editor/index';
+import editorConfig from './components/editor/editor.config';
 
 /* eslint-disable no-new */
-vueCompoent.install(Vue);
-
+// vueCompoent.install(Vue);
+editor.install(Vue, editorConfig);
 new Vue({
-  el: 'body',
-  components: { App }
+  el: '#app',
+  template: '<App/>',
+  components: {App}
 })
 

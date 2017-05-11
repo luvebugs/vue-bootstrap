@@ -8,8 +8,7 @@ export default {
     inherit: false,
     props: {
         model: {
-            required: true,
-            twoWay: true
+            required: true
         },
         language: {
             type: String,
@@ -50,11 +49,11 @@ export default {
             }
         }
     },
-    beforeCompile: function() {
+    created: function() {
         this.isChanging = false;
         this.control = null;
     },
-    ready: function() {
+    mounted: function() {
         //  initialize the summernote
         if (this.minHeight > this.height) {
             this.minHeight = this.height;

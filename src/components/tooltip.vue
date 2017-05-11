@@ -1,12 +1,14 @@
 <template>
-<span v-el:trigger>
+<div>
+<span ref="trigger">
     <slot></slot>
   </span>
-<div v-el:popover v-if="show" style="display:block;" :class="['tooltip',placement]" :transition="effect">
+<div ref="popover" v-if="show" style="display:block;" :class="['tooltip',placement]" :transition="effect">
     <div class="tooltip-arrow"></div>
     <div class="tooltip-inner">
-        <slot name="content">{{{content}}}</slot>
+        <slot name="content" v-html="content"></slot>
     </div>
+</div>
 </div>
 </template>
 
@@ -53,8 +55,8 @@ export default {
                 return
             }
             setTimeout(() => {
-                const popover = this.$els.popover
-                const trigger = this.$els.trigger.children[0]
+                const popover = this.$refs.popover;
+                const trigger = this.$refs.trigger.children[0];
                 switch (this.placement) {
                     case 'top':
                         this.position.left = trigger.offsetLeft - popover.offsetWidth / 2 + trigger.offsetWidth / 2
@@ -80,8 +82,8 @@ export default {
             }, 0)
         }
     },
-    ready() {
-        let trigger = this.$els.trigger
+    mounted() {
+        let trigger = this.$refs.trigger;
         if (!trigger) return console.error('Could not find trigger v-el in your component that uses popoverMixin.')
 
         if (this.trigger === 'focus' && !~trigger.tabIndex) {
@@ -118,7 +120,7 @@ export default {
     animation: fadein-in 0.3s ease-in;
 }
 
-.fadein-leave {
+.fadein-leave-active {
     animation: fadein-out 0.3s ease-out;
 }
 

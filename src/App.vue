@@ -1,20 +1,20 @@
 <template>
-  <div id="app">
-    <auto></auto>
-    <index></index>
+  <div>
+    <v-editor content="" :height="500">
+    </v-editor>
   </div>
 </template>
 
 <script>
 import Hello from './components/Hello'
-import Index from './index'
-import Auto from './auto'
+// import Index from './index'
+// import Auto from './auto'
 
 export default {
   components: {
     Hello,
-    Index,
-    Auto
+    // Index,
+    // Auto
   }
 }
 </script>

@@ -62,7 +62,7 @@ td {
             </div>
         </div>
         <div class="setting col-sm-20">
-            <div v-el:setting class="dropdown float-sm-right" :class.sync="{'open': open}">
+            <div ref="setting" class="dropdown float-sm-right" :class="{'open': open}">
                 <button type="button" class="btn btn-secondary dropdown-toggle " @click="toggleMenu(open)">
                     <i class="fa fa-cog" aria-hidden="true" style="padding-right: 8px;"></i>显示列
                 </button>
@@ -71,7 +71,7 @@ td {
                         <span>全选</span>
                         <i class="fa fa-check" v-if="allChecked" style="pointer-events: none;"></i>
                     </a>
-                    <a class="dropdown-item" v-for="(index, column) in columns" @click="toggleColumn(column)">
+                    <a class="dropdown-item" v-for="(column, index) in columns" @click="toggleColumn(column)">
                         <span>{{column.name}}</span>
                         <i class="fa fa-check" v-if="column.visible" style="pointer-events: none;"></i>
                     </a>
@@ -88,8 +88,8 @@ td {
                         <th v-show="selectable" @click="checkAll(allSelected)" class="header-check">
                             <v-check :check="allSelected" style="pointer-events: none"></v-check>
                         </th>
-                        <th v-for="(index, column) in columns" v-show="column.visible" @click="sortcColumn(column, index)" v-bind:style="{'min-width': column.width}">
-                            <span class="table-column">{{{column.name}}}</span>
+                        <th v-for="(column, index) in columns" v-show="column.visible" @click="sortcColumn(column, index)" v-bind:style="{'min-width': column.width}">
+                            <span class="table-column" v-html="column.name"></span>
                             <template v-if="column.sortable">
                                 <i class="fa fa-sort float-xs-right" aria-hidden="true" v-if="sortOrders.key !== column.name"></i>
                                 <i class="fa fa-sort-amount-desc float-xs-right" aria-hidden="true" v-if="sortOrders.key === column.name && sortOrders.value === 'desc'"></i>
@@ -99,12 +99,12 @@ td {
                     </tr>
                 </thead>
                 <tbody class="table-body">
-                    <tr v-for="(index, row) in rows" @click="checkRow(row)">
+                    <tr v-for="(row, index) in rows" @click="checkRow(row)">
                         <td v-show="selectable" class="body-check">
                             <v-check :check="row.checked" style="pointer-events: none"></v-check>
                         </td>
                         <td v-for="column in columns" v-show="column.visible">
-                            <span class="table-column">{{{getColumn(column, row, index)}}}</span>
+                            <span class="table-column" v-html="getColumn(column, row, index)"></span>
                         </td>
                     </tr>
                 </tbody>
@@ -114,7 +114,7 @@ td {
     </div>
     <div class="row">
         <div class="col-sm-24">
-            <v-pagination :page-number.sync="pageNumber" :page-size.sync="pageSize" :page-total.sync="pageTotal" :size-change="sizeChange" :page-change="pageChange"></v-pagination>
+            <v-pagination :page-number="pageNumber" :page-size="pageSize" :page-total="pageTotal" :size-change="sizeChange" :page-change="pageChange"></v-pagination>
         </div>
     </div>
 
@@ -234,7 +234,7 @@ export default {
                         sortable: item.sortable,
                         width: item.width || 'auto'
                     }
-                    self.header.$set(index, column);
+                    Vue.set(self.header, index, column);
                 });
                 return self.header;
         },
@@ -247,7 +247,7 @@ export default {
                 for (var key in item) {
                     row[key] = item[key];
                 }
-                self.body.$set(index, row);
+                Vue.set(self.body, index, row);
             });
             return self.body;
         },
@@ -263,9 +263,9 @@ export default {
             return isAll;
         }
     },
-    ready: function () {
+    mounted: function () {
         this._closeEvent = document.addEventListener('click', (e) => {
-          if (this.$els && this.$els.setting && !this.$els.setting.contains(e.target)) this.open = false;
+          if (this.$refs && this.$refs.setting && !this.$refs.setting.contains(e.target)) this.open = false;
         });
 
         this.handler(this);
@@ -383,15 +383,6 @@ export default {
                 item.visible = false;
             });
         }
-    },
-    route: {
-        activate: function(transition) {
-            transition.next()
-        },
-        deactivate: function(transition) {
-            transition.next()
-        },
-        canReuse: false
     }
 }
 </script>

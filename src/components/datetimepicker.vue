@@ -5,8 +5,8 @@
         </div>
         <div class="calendar-pannel" v-if="visiable">
             <div class="calendar-item" v-for="calendar in calendars">
-                <v-datepicker :side="calendar" :is-ranged="isRanged" :date.sync="date" :start-date.sync="dates[0]" :end-date.sync="dates[1]" :lang="true" :year.sync="year" :month.sync="month"></v-datepicker>
-                <v-timepicker :time.sync="times[calendar]"></v-timepicker>
+                <v-datepicker :side="calendar" :is-ranged="isRanged" :date="date" :start-date="dates[0]" :end-date="dates[1]" :lang="true" :year.sync="year" :month.sync="month"></v-datepicker>
+                <v-timepicker :time="times[calendar]"></v-timepicker>
             </div>
         </div>
     </div>
@@ -46,7 +46,7 @@
                 
             }
         },
-        ready: function () {},
+        mounted: function () {},
         methods: {
             change: function (value) {
                 console.log(value);

@@ -90,14 +90,14 @@
     <!--用来存放文件信息-->
     <div class="card" v-if="type == 'card'">
         <div class="card-block">
-            <div v-el:upload-select class="uploader" v-for="thumb in thumbs">
+            <div ref="uploadSelect" class="uploader" v-for="thumb in thumbs">
                 <img v-bind:src="thumb.src" v-bind:alt="thumb.file.name" class="rounded">
                 <div class="uploader-operator">
                     <span class="thumb-name">{{thumb.file.name}}</span>
                     <span class="thumb-remove" @click="removeFile(thumb.file)"><i class="fa fa-trash-o" aria-hidden="true"></i></span>
                 </div>
             </div>
-            <div v-el:upload-select class="uploader uploader-select">
+            <div ref="uploadSelect" class="uploader uploader-select">
                 <div>
                     <i class="fa fa-plus" aria-hidden="true" style="font-size: 24px;font-weight: lighter;"></i>
                 </div>
@@ -106,7 +106,7 @@
     </div>
     <div class="btn-list" v-else>
         <div class="uploader-btn">
-            <button v-el:uploader class="btn btn-secondary" id="picker">
+            <button ref="uploader" class="btn btn-secondary" id="picker">
                     <i class="fa fa-upload" aria-hidden="true"></i>选择文件
             </button>
         </div>
@@ -155,7 +155,7 @@ export default {
             options: self.option
         }
     },
-    ready: function() {
+    mounted: function() {
         let self = this;
 
 
@@ -192,10 +192,10 @@ export default {
             self.fileQueued(file);
         });
         self.uploader.addButton({
-            id: self.$els.uploadSelect
+            id: self.$refs.uploadSelect
         });
         self.uploader.addButton({
-            id: self.$els.uploader
+            id: self.$refs.uploader
         });
     },
     methods: {

@@ -45,7 +45,7 @@
     data: function () {
       return {}
     },
-    ready: function () {
+    mounted: function () {
       if (!this.data[this.name]) {
         this.data[this.name] = {};
       }

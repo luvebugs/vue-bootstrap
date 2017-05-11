@@ -2,7 +2,7 @@
     <div class="timepicker">
         <div class="timepicker-warp">
             <div class="timepicker-header">时</div>
-            <div class="timepicker-scrollbar" v-el:hour v-scroll:scroll="'hour'">
+            <div class="timepicker-scrollbar" ref="hour" v-scroll:scroll="'hour'">
                 <ul class="timepicker-list">
                     <li class="timepicker-item" v-for="n in 24" v-text="n" @click="selectHour('hour', n, $event)" :class="{'active': n == hour}"></li>
                 </ul>
@@ -10,7 +10,7 @@
         </div>
         <div class="timepicker-warp">
             <div class="timepicker-header">分</div>
-            <div class="timepicker-scrollbar" v-el:minute v-scroll:scroll="'minute'">
+            <div class="timepicker-scrollbar" ref="minute" v-scroll:scroll="'minute'">
                 <ul class="timepicker-list">
                     <li class="timepicker-item" v-for="n in 60" v-text="n" @click="selectMinute('minute', n, $event)" :class="{'active': n == minute}"></li>
                 </ul>
@@ -18,7 +18,7 @@
         </div>
         <div class="timepicker-warp">
             <div class="timepicker-header">秒</div>
-            <div class="timepicker-scrollbar" v-el:second v-scroll:scroll="'second'">
+            <div class="timepicker-scrollbar" ref="second" v-scroll:scroll="'second'">
                 <ul class="timepicker-list" >
                     <li class="timepicker-item" v-for="n in 60" v-text="n" @click="selectSecond('second', n, $event)" :class="{'active': n == second}"></li>
                 </ul>
@@ -82,22 +82,22 @@ import Vue from 'vue';
         },
         methods: {
             scroll: function (type, event) {
-                var number = this.$els[type].scrollTop / 24 - 0.5;
+                var number = this.$refs[type].scrollTop / 24 - 0.5;
                 this[type] = Math.ceil(number);
 
             },
             selectHour: function (type, number, event) {
                 this.hour = number;
                 this.itemTarget = event.target;
-                this.$els[type].scrollTop = number * event.target.clientHeight;
+                this.$refs[type].scrollTop = number * event.target.clientHeight;
             },
             selectMinute: function (type, number, event) {
                 this.minute = number;
-                this.$els[type].scrollTop = number * event.target.clientHeight;
+                this.$refs[type].scrollTop = number * event.target.clientHeight;
             },
             selectSecond: function (type, number, event) {
                 this.second = number;
-                this.$els[type].scrollTop = number * event.target.clientHeight;
+                this.$refs[type].scrollTop = number * event.target.clientHeight;
             }
         },
     }

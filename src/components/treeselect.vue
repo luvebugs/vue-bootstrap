@@ -152,10 +152,10 @@
 /* .expand-enter 定义进入的开始状态 */
 
 
-/* .expand-leave 定义离开的结束状态 */
+/* .expand-leave-active 定义离开的结束状态 */
 
 .expand-enter,
-.expand-leave {
+.expand-leave-active {
     opacity: 0;
 }
 
@@ -177,10 +177,10 @@
 }
 </style>
 <template>
-<div class="dropdown select-main" :class.sync="{'open': open}">
+<div class="dropdown select-main" :class="{'open': open}">
     <button type="button" class="btn btn-secondary dropdown-toggle select-button" v-bind:data-toggle="dropdown" @click="show(open)" v-if="type=='select'">
                 <div class="select-name">
-                    <span class="select-name-item" v-for="value in values" track-by="$index" v-text="value.name"></span>
+                    <span class="select-name-item" v-for="value in values" v-bind:key="value.index" v-text="value.name"></span>
                     <span v-if="!values.length" v-text="plaseholder"></span>
                 </div>
                 <span class="close select-close" @click.stop="clear()">&times;</span>
@@ -189,24 +189,24 @@
     <div class="select-input" v-bind:data-toggle="dropdown" @click="show(open)" :style="{'width': width}" v-else>
         <div class="select-name">
             <span v-if="!focus && !values.length" v-text="plaseholder"></span>
-            <span class="select-name-item" v-for="value in values" track-by="$index">
+            <span class="select-name-item" v-for="value in values" v-bind:key="value.index">
                 {{value.name}}
             </span>
             <input type="text" class="select-name-cursor" @focus="focusSelect(true)" @blur="blurSelect(false)" v-model="key" @keyup.enter="search(key, options)" autocomplete="off">
         </div>
         <span class="close select-close" @click.stop="clear()">&times;</span>
     </div>
-    <div class="dropdown-menu" v-show="open" transition="expand">
+    <div class="dropdown-menu" v-show="open">
         <div class="dropdown-searchbox" v-if="type=='select'">
             <input type="text" class="search-box" placeholder="输入enter查询" autocomplete="off" v-model="key" @keyup.enter="search(key, options)">
             <span v-show="key" class="close search-close" @click="clearKey()">&times;</span>
         </div>
 
-        <div v-el:scroll class="dropdown-scroll">
+        <div ref="scroll" class="dropdown-scroll">
             <template v-if="options">
                 <div class="dropdown-tree-item">
                     <ul class="tree-level">
-                        <v-tree v-ref:tree v-for="model in options" :model="model" :root="model" :select-change="changeSelect" :check-change="changeCheck" :key="key" :editable="false" :removeable="false" :addable="false" :checkable="multiple">
+                        <v-tree ref="tree" v-for="model in options" :model="model" :root="model" :select-change="changeSelect" :check-change="changeCheck" :key="key" :editable="false" :removeable="false" :addable="false" :checkable="multiple">
                         </v-tree>
                     </ul>
                 </div>
@@ -239,9 +239,7 @@ export default {
         },
         'open': {
             type: Boolean,
-            default: false,
-            // 双向绑定
-            twoWay: true
+            default: false
         },
         'dropdown': {
             type: Boolean,
@@ -285,7 +283,7 @@ export default {
     },
     computed: {
     },
-    ready: function() {
+    mounted: function() {
         this._closeEvent = document.addEventListener('click', (e) => {
             if (this.$el && !this.$el.contains(e.target)) this.open = false;
         });
@@ -342,15 +340,6 @@ export default {
         show: function(open) {
             this.open = !this.open;
         }
-    },
-    route: {
-        activate: function(transition) {
-            transition.next()
-        },
-        deactivate: function(transition) {
-            transition.next()
-        },
-        canReuse: false
     }
 }
 </script>

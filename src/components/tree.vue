@@ -24,13 +24,13 @@
     }
 }
 /* 必需 */
-.expand-transition {
+.expand-enter-active, .expand-leave-active {
   transition: all 0.3s ease;
   transform: translateY(0);
 }
 /* .expand-enter 定义进入的开始状态 */
 /* .expand-leave 定义离开的结束状态 */
-.expand-enter, .expand-leave {
+.expand-enter, .expand-leave-active {
   opacity: 0;
 }
 
@@ -58,8 +58,8 @@
             <span v-if="removeable" @click="removeChild(index)"><i class="fa fa-remove" aria-hidden="true"></i></span>
             <span v-if="addable" @click="addChild()"><i class="fa fa-plus" aria-hidden="true"></i></span>
         </div>
-        <ul class="tree-level" v-show="open" v-if="isFolder"  transition="expand">
-            <item class="tree-item" v-for="(index, model) in model.children | filterBy key" :model="model" :index="index" :root="root" :select-change="selectChange" :check-change="checkChange" :key="key" :checkable="checkable" :level="subLevel">
+        <ul class="tree-level" v-show="open" v-if="isFolder">
+            <item class="tree-item" v-for="(index, model) in model.children" :model="model" :index="index" :root="root" :select-change="selectChange" :check-change="checkChange" :key="key" :checkable="checkable" :level="subLevel">
             </item>
                 <!-- <div class="node-add" @click="addChild"><i class="fa fa-plus" aria-hidden="true"></i></div> -->
         </ul>

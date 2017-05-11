@@ -1,7 +1,11 @@
 <template>
     <label class="i-checks m-b-none" :class="{'i-radio': type == 'radio'}" @change="change(check)">
-        <span v-if="type == 'radio'"><input type="{{type}}" v-model="radio" name="{{name}}" value="{{value}}"/><i></i></span>
-        <span v-else><input type="{{type}}" v-model="check"/><i></i></span>
+        <span v-if="type == 'radio'">
+            <input v-bind:type="type" v-bind:name="name" v-bind:value="value"/><i></i>
+        </span>
+        <span v-else>
+            <input v-bind:type="type"/><i></i>
+        </span>
     </label>
 </template>
 

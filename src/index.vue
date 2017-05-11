@@ -7,8 +7,8 @@
         <div>
             <div>日期: {{datetimepicker.value}}</div>
             是否范围选择:
-            <v-switch :value.sync="datetimepicker.isRanged"></v-switch>
-            <v-datetimepicker :value.sync="datetimepicker.value" :is-ranged="datetimepicker.isRanged"></v-datetimepicker>
+            <v-switch :value="datetimepicker.isRanged"></v-switch>
+            <v-datetimepicker :value="datetimepicker.value" :is-ranged="datetimepicker.isRanged"></v-datetimepicker>
         </div>
         <br/>
         <br/>
@@ -24,10 +24,10 @@
         <br/>
         <label><h5>2.树插件</h5></label>
         <div>
-            所有触发check: <div v-for="treeval in tree.values" track-by="$index">name: {{treeval.name}} - id: {{treeval.value}}</div>
+            所有触发check: <div v-for="treeval in tree.values" track-by="index">name: {{treeval.name}} - id: {{treeval.value}}</div>
             单个触发select: <div>name: {{tree.value.name}} - id: {{tree.value.value}}</div>
             <ul class="tree-level">
-                <v-tree v-for="model in tree.selectOptions" :model="model" :root="model" :checkable="true" :check-change="treeChangeCheck" :select-change="treeChangeSelect">
+                <v-tree v-for="model in tree.selectOptions" v-bind:key="model.index" :model="model" :root="model" :checkable="true" :check-change="treeChangeCheck" :select-change="treeChangeSelect">
                 </v-tree>
             </ul>
         </div>
@@ -46,14 +46,14 @@
         <div>
             <div>
                 是否打开:
-                <v-switch :value.sync="cascader.isOpen"></v-switch>
+                <v-switch :value="cascader.isOpen"></v-switch>
                 是否多选:
-                <v-switch :value.sync="cascader.multiple"></v-switch>
+                <v-switch :value="cascader.multiple"></v-switch>
                 类型:
-                <v-check :radio.sync="cascader.type" type="radio" name="cascaderType" value="select"></v-check>
-                <v-check :radio.sync="cascader.type" type="radio" name="cascaderType" value="input"></v-check>
+                <v-check :radio="cascader.type" type="radio" name="cascaderType" value="select"></v-check>
+                <v-check :radio="cascader.type" type="radio" name="cascaderType" value="input"></v-check>
             </div>
-            <v-cascaderselect :values.sync="cascader.selectValues" :options="cascader.selectOptions" :multiple="cascader.multiple" :open.sync="cascader.isOpen" :type="cascader.type" width="200px"></v-cascaderselect>
+            <v-cascaderselect :values="cascader.selectValues" :options="cascader.selectOptions" :multiple="cascader.multiple" :open="cascader.isOpen" :type="cascader.type" width="200px"></v-cascaderselect>
         </div>
         <br/>
         <br/>
@@ -61,14 +61,14 @@
         <div>
             <div>
                 是否打开:
-                <v-switch :value.sync="tree.isOpen"></v-switch>
+                <v-switch :value="tree.isOpen"></v-switch>
                 是否多选:
-                <v-switch :value.sync="tree.multiple"></v-switch>
+                <v-switch :value="tree.multiple"></v-switch>
                 类型:
-                <v-check :radio.sync="tree.type" type="radio" name="treeType" value="select"></v-check>
-                <v-check :radio.sync="tree.type" type="radio" name="treeType" value="input"></v-check>
+                <v-check :radio="tree.type" type="radio" name="treeType" value="select"></v-check>
+                <v-check :radio="tree.type" type="radio" name="treeType" value="input"></v-check>
             </div>
-            <v-treeselect :values.sync="tree.selectValues" :options="tree.selectOptions" :multiple="tree.multiple" :open.sync="tree.isOpen" :type="tree.type" style="width:200px;"></v-treeselect>
+            <v-treeselect :values="tree.selectValues" :options="tree.selectOptions" :multiple="tree.multiple" :open="tree.isOpen" :type="tree.type" style="width:200px;"></v-treeselect>
         </div>
         <br/>
         <br/>
@@ -76,22 +76,22 @@
         <div>
             <div>
                 是否打开:
-                <v-switch :value.sync="select.isOpen"></v-switch>
+                <v-switch :value="select.isOpen"></v-switch>
                 是否多选:
-                <v-switch :value.sync="select.multiple"></v-switch>
+                <v-switch :value="select.multiple"></v-switch>
                 是否加载中:
-                <v-switch :value.sync="select.loading"></v-switch>
+                <v-switch :value="select.loading"></v-switch>
                 类型:
-                <v-check :radio.sync="select.type" type="radio" name="selectType" value="select"></v-check>
-                <v-check :radio.sync="select.type" type="radio" name="selectType" value="input"></v-check>
+                <v-check :radio="select.type" type="radio" name="selectType" value="select"></v-check>
+                <v-check :radio="select.type" type="radio" name="selectType" value="input"></v-check>
             </div>
-            <v-select :values.sync="select.selectValues" :options="select.selectOptions" :multiple="select.multiple" :open.sync="select.isOpen" :loading="select.loading" :loadable="true" :type="select.type" style="width:200px;"></v-select>
+            <v-select :values="select.selectValues" :options="select.selectOptions" :multiple="select.multiple" :open="select.isOpen" :loading="select.loading" :loadable="true" :type="select.type" style="width:200px;"></v-select>
         </div>
         <br/>
         <br/>
         <label><h5>7.搜索框插件</h5></label>
         <div>
-            <v-search :value.sync="search.searchValue" :options="search.searchOptions" :selected.sync="search.searchSelected" :search="searchKeyValue" style="width:400px;">
+            <v-search :value="search.searchValue" :options="search.searchOptions" :selected="search.searchSelected" :search="searchKeyValue" style="width:400px;">
             </v-search>
         </div>
         <br/>
@@ -109,16 +109,16 @@
         <br/>
         <label><h5>9.checkbox</h5></label>
         <div>
-            <v-check :check.sync="checkbox.value"></v-check>
+            <v-check :check="checkbox.value"></v-check>
             <input type="text" v-model="radio.value"/>
-            <v-check :radio.sync="radio.value" type="radio" name="radio" value="a"></v-check>
-            <v-check :radio.sync="radio.value" type="radio" name="radio" value="b"></v-check>
+            <v-check :radio="radio.value" type="radio" name="radio" value="a"></v-check>
+            <v-check :radio="radio.value" type="radio" name="radio" value="b"></v-check>
         </div>
         <br/>
         <br/>
         <label><h5>10.switch</h5></label>
         <div>
-            <v-switch :value.sync="checkbox.value"></v-switch>
+            <v-switch :value="checkbox.value"></v-switch>
         </div>
         <br/>
         <br/>
@@ -132,11 +132,11 @@
         <label><h5>12.toast</h5></label>
         <div>
             是否打开:
-            <v-switch :value.sync="toast.show"></v-switch>
+            <v-switch :value="toast.show"></v-switch>
             打开时间: <input v-model="toast.timeout" type="text" />
-            打开类型: <v-check :radio.sync="toast.type" type="radio" name="toastType" value="success"></v-check>成功
-            <v-check :radio.sync="toast.type" type="radio" name="toastType" value="danger"></v-check>错误
-            <v-check :radio.sync="toast.type" type="radio" name="toastType" value="warning"></v-check>警告
+            打开类型: <v-check :radio="toast.type" type="radio" name="toastType" value="success"></v-check>成功
+            <v-check :radio="toast.type" type="radio" name="toastType" value="danger"></v-check>错误
+            <v-check :radio="toast.type" type="radio" name="toastType" value="warning"></v-check>警告
             <br/>
             <br/>
             <v-toast v-if="toast.show" :type="toast.type" :timeout="changeToNumber()" :on-closed="onToastClosed">
@@ -147,8 +147,8 @@
         <br/>
         <label><h5>13.tooltip</h5></label>
         <div>
-            打开类型: <v-check :radio.sync="tooltip.effect" type="radio" name="tipposition" value="fade"></v-check>fade
-            <v-check :radio.sync="tooltip.effect" type="radio" name="tipposition" value="scale"></v-check>scale
+            打开类型: <v-check :radio="tooltip.effect" type="radio" name="tipposition" value="fade"></v-check>fade
+            <v-check :radio="tooltip.effect" type="radio" name="tipposition" value="scale"></v-check>scale
             <br/>
             <br/>
             <v-tooltip effect="tooltip.effect" placement="bottom" content="这是我的内容">
@@ -192,9 +192,9 @@
         <div>
             <div>
                 是否加载中:
-                <v-switch :value.sync="table.loading"></v-switch>
+                <v-switch :value="table.loading"></v-switch>
             </div>
-            <v-table :title="table.title" :header="table.tableHeader" :body="table.tableBody" :selects.sync="table.selectIdeas" :check-change="tableCheckRow" :page-change="getTable" :size-change="getTable" :page-total.sync="table.all" :page-size.sync="table.size" :page-number.sync="table.now"
+            <v-table :title="table.title" :header="table.tableHeader" :body="table.tableBody" :selects="table.selectIdeas" :check-change="tableCheckRow" :page-change="getTable" :size-change="getTable" :page-total="table.all" :page-size="table.size" :page-number="table.now"
                 :loading="table.loading"></v-table>
         </div>
         <br/>
@@ -230,9 +230,9 @@ import vCascader from './components/cascader.vue'
 import vCheck from './components/check.vue'
 import vValidator from './components/validator.vue'
 import vSwitch from './components/switch.vue'
-import vToast from './components/toast.vue'
+// import vToast from './components/toast.vue'
 import vTooltip from './components/tooltip.vue'
-import vUpload from './components/upload.vue'
+// import vUpload from './components/upload.vue'
 import vDatetimepicker from './components/datetimepicker.vue'
 import vTimepicker from './components/timepicker.vue'
 import vDatepicker from './components/datepicker.vue'
@@ -333,9 +333,9 @@ export default {
         vCascader,
         vCascaderselect,
         vSwitch,
-        vToast,
+        // vToast,
         vTooltip,
-        vUpload,
+        // vUpload,
         vDatetimepicker,
         vTimepicker,
         vDatepicker

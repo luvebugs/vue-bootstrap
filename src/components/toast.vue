@@ -1,12 +1,12 @@
 <style>
 /* 必需 */
-.expand-transition {
+.expand-enter-active, .expand-leave-active {
   transition: all 0.3s ease;
   transform: translateY(0);
 }
 /* .expand-enter 定义进入的开始状态 */
 /* .expand-leave 定义离开的结束状态 */
-.expand-enter, .expand-leave {
+.expand-enter, .expand-leave-active {
   opacity: 0;
 }
 
@@ -21,13 +21,13 @@
 }
 </style>
 <template>
-    <div class="alert" :class="'alert-' + type" :class="{ 'alert-dismissible': dismissible, fade: animation, in: animation }" role="alert" transition="expand">
+    <transition class="alert" :class="'alert-' + type" :class="{ 'alert-dismissible': dismissible, fade: animation, in: animation }" role="alert" name="expand">
         <button v-if="dismissible" type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             <span class="sr-only">Close</span>
         </button>
         <slot></slot>
-    </div>
+    </transition>
 </template>
 
 <script type="text/babel">
@@ -61,7 +61,7 @@
                 $(this.$el).alert('close');
             }
         },
-        ready: function()
+        mounted: function()
         {
             if(this.timeout >= 0)
             {

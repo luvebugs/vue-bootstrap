@@ -26,7 +26,7 @@
 }
 
 /* 必需 */
-.expand-transition {
+.expand-enter-active, .expand-leave-active {
   transition: all 0.3s ease;
   transform: translateY(0);
 }
@@ -48,10 +48,10 @@
 </style>
 <!-- item template -->
 <template>
-    <div class="cascader-panel clearfix" v-if="models&&models.length" transition="expand">
+    <div class="cascader-panel clearfix" v-if="models&&models.length">
         <div class="cascader-item">
             <ul class="cascader-item-ul">
-                <li v-for="(index, model) in models | filterBy key" @click="changeSelect(model)" transition="expand">
+                <li v-for="(index, model) in models" @click="changeSelect(model)">
                     <div class="node" :class="{'node-blod': !!model.children, 'node-check': checkedModel == model.value}" >
                         <span>{{model.name}}</span>
                         <i v-if="!!model.children" class="fa fa-angle-right float-sm-right" aria-hidden="true"></i>

@@ -73,20 +73,20 @@ Vue.directive('validate', {
         let isValid = false;
         isValid = reqiuredValid(validation, isValid);
         if (!isValid) {
-            this.vm.$set(validation.result, isValid);
+            Vue.set(this.vm, validation.result, isValid);
             return;
         }
         isValid = minAndMaxValid(validation, isValid);
         if (!isValid) {
-            this.vm.$set(validation.result, isValid);
+            Vue.set(this.vm, validation.result, isValid);
             return;
         }
         isValid = regExpValid(validation, isValid);
         if (!isValid) {
-            this.vm.$set(validation.result, isValid);
+            Vue.set(this.vm, validation.result, isValid);
             return;
         }
-        this.vm.$set(validation.result, isValid);
+        Vue.set(this.vm, validation.result, isValid);
     }
 });
 </script>

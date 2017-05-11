@@ -17,8 +17,7 @@
         props: {
             show: {
                 type: Boolean,
-                default: false,
-                twoWay: true
+                default: false
             },
             animation: {
                 type: Boolean,
@@ -74,7 +73,7 @@
                 } // end if
             }
         },
-        ready: function()
+        mounted: function()
         {
             $(this.$el).on('shown.bs.modal', () =>
             {

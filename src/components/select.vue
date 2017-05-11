@@ -130,13 +130,13 @@
 }
 
 /* 必需 */
-.expand-transition {
+.expand-enter-active, .expand-leave-active {
   transition: all 0.3s ease;
   transform: translateY(0);
 }
 /* .expand-enter 定义进入的开始状态 */
 /* .expand-leave 定义离开的结束状态 */
-.expand-enter, .expand-leave {
+.expand-enter, .expand-leave-active {
   opacity: 0;
 }
 
@@ -151,7 +151,7 @@
 }
 </style>
 <template>
-<div class="dropdown select-main" :class.sync="{'open': open}">
+<div class="dropdown select-main" :class="{'open': open}">
     <button type="button" class="btn btn-secondary dropdown-toggle select-button" v-bind:data-toggle="dropdown" @click="show(open)" v-if="type=='select'">
                 <div class="select-name">
                     <span class="select-name-item" v-for="value in values" v-text="value.name"></span>
@@ -163,7 +163,7 @@
     <div class="select-input" v-bind:data-toggle="dropdown" @click="show(open)" :style="{'width': width}" v-else>
         <div class="select-name">
             <span v-if="!focus && !values.length" v-text="plaseholder"></span>
-            <span class="select-name-item" v-for="value in values" track-by="$index">
+            <span class="select-name-item" v-for="value in values" v-bind:key="value.index">
                 {{value.name}}
                 <i class="fa fa-close" aria-hidden="true" @click.stop="clearSelect()"></i>
             </span>
@@ -171,19 +171,19 @@
         </div>
         <span class="close select-close" @click.stop="clear()">&times;</span>
     </div>
-    <div class="dropdown-menu" v-show="open" transition="expand">
+    <transition class="dropdown-menu" v-show="open" name="expand">
         <div class="dropdown-searchbox" v-if="type=='select'">
             <input type="text" class="search-box" placeholder="输入enter查询" autocomplete="off" v-model="key" @keyup.enter="search(key, options)">
             <span v-show="key" class="close search-close" @click="clearKey()">&times;</span>
         </div>
 
-        <div v-el:scroll class="dropdown-scroll">
+        <div ref="scroll" class="dropdown-scroll">
         <template v-if="options && options.length" >
             <a class="dropdown-item" v-if="multiple" @click="selectAll(item)">
                 <span>全选</span>
                 <i class="fa fa-check" v-if="allChecked" style="pointer-events: none;"></i>
             </a>
-            <a class="dropdown-item" v-for="(index, item) in selects | filterBy key" @click="select(item)" >
+            <a class="dropdown-item" v-for="(index, item) in selects" @click="select(item)" >
                 <span>{{item.name}}</span>
                 <i class="fa fa-check" v-if="item.selected" style="pointer-events: none;"></i>
             </a>
@@ -193,12 +193,13 @@
             <!-- <button type="button" class="btn btn-link dropdown-loadmore-link" @click="load()"><i class="fa fa-spinner spinner-loading-icon" aria-hidden="true" v-if="loading" style="pointer-events: none;"></i><i class="fa fa-refresh" aria-hidden="true" v-if="!loading" style="pointer-events: none;"></i></button> -->
             <i class="fa fa-spinner spinner-loading-icon" aria-hidden="true" v-show="loading"></i>
         </div>
-        </div>
+        </transition>
     </div>
 </template>
 
 <script>
-import vTip from './tooltip.vue'
+import Vue from 'vue';
+import vTip from './tooltip.vue';
 export default {
     name: 'v-select',
     components: {
@@ -218,9 +219,7 @@ export default {
         },
         'open': {
             type: Boolean,
-            default: false,
-            // 双向绑定
-            twoWay: true
+            default: false
         },
         'dropdown': {
             type: Boolean,
@@ -287,7 +286,7 @@ export default {
                     name: content.name,
                     value: content.value
                 }
-                self.options.$set(index, item);
+                Vue.set(self.options, index, item);
             });
             return self.options;
         },
@@ -300,18 +299,18 @@ export default {
             }
         }
     },
-    ready: function () {
+    mounted: function () {
         this._closeEvent = document.addEventListener('click', (e) => {
           if (this.$el && !this.$el.contains(e.target)) this.open = false;
         });
-        this.$els.scroll.addEventListener('scroll', (e) => {
-            let scrollTop = this.$els.scroll.scrollTop;
-            let scrollHeight = this.$els.scroll.scrollHeight;
-            let clientHeight = this.$els.scroll.clientHeight;
+        this.$refs.scroll.addEventListener('scroll', (e) => {
+            let scrollTop = this.$refs.scroll.scrollTop;
+            let scrollHeight = this.$refs.scroll.scrollHeight;
+            let clientHeight = this.$refs.scroll.clientHeight;
             if ((scrollHeight - scrollTop) == (clientHeight + 10)) {
                 this.load();
             } else if ((scrollHeight - scrollTop) < (clientHeight + 8)) {
-                this.$els.scroll.scrollTop = scrollHeight - (clientHeight + 10);
+                this.$refs.scroll.scrollTop = scrollHeight - (clientHeight + 10);
             }
             e.stopPropagation();
             e.preventDefault();
@@ -385,15 +384,6 @@ export default {
         show: function (open) {
             this.open = !this.open;
         }
-    },
-    route: {
-        activate: function (transition) {
-            transition.next()
-        },
-        deactivate: function (transition) {
-            transition.next()
-        },
-        canReuse: false
     }
 }
 </script>
